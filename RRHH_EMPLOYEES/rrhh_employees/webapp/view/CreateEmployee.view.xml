@@ -46,7 +46,9 @@
                                     </FlexBox>              
                              </WizardStep>                                 
 <!--2) Datos de Empleado-->   
-                            <WizardStep id="dataEmployeeStep" title="{i18n>dataEmpleado}" validated="false" >
+                            <WizardStep id="dataEmployeeStep" title="{i18n>dataEmpleado}" validated="false"
+                                        activate="onEmployeeValidation" >
+
                              <MessageStrip class="sapUiSmallMarginBottom"
                                               text="{i18n>msgStep2}"
                                               showIcon="true" />
@@ -54,15 +56,70 @@
                                 <form:SimpleForm editable="true">
 
                                      <Label text="{i18n>nombre}" required="true"/>
-                                     <Input valueState="None" change="onEmployeeValidation" value=""></Input>
+                                     <Input valueState="{/FirstNameState}" liveChange="onEmployeeValidation" value="{/FirstName}"/>
 
                                      <Label text="{i18n>apellidos}" required="true"/>
-                                     <Input valueState="None" change="onEmployeeValidation" value=""></Input>
+                                     <Input valueState="{/LastNameState}" liveChange="onEmployeeValidation" value="{/LastName}"></Input>
 
-                                    <Label text="{= ${/_type} === 'autonomo' ? ${i18n>CIF} : ${i18n>DNI}}" required="true"/>
-									<Input value="{/Dni}" valueState="{/_DniState}" change="validateDNI"></Input>
+                                    <Label text="{= ${/_typeEmployee} === 'autonomo' ? ${i18n>CIF} : ${i18n>DNI}}" required="true"/>
+									<Input value="{/Dni}" valueState="{/_DniState}" liveChange="validateDNI"></Input>
 
+                                    <Label text="{= ${/_typeEmployee} === 'autonomo' ? ${i18n>precioDiario} : ${i18n>saldoBrutoAnual}}" />
+                                    <!-- Ranges-->
+                                    	<VBox>
+													<Slider value="{/salary}"
+														min="12000" 
+														max="80000"
+														step="1000" inputsAsTooltips="true" showAdvancedTooltip="true" enableTickmarks="true"
+														 width="100%" progress="false" class="sapUiSmallMarginBottom" 
+														 visible="{=  ${/_typeEmployee} === 'interno'}">
+														<ResponsiveScale tickmarksBetweenLabels="50"/>
+													</Slider>
+
+													<Slider value="{/salary}"
+														min="100" 
+														max="2000"
+														step="100" inputsAsTooltips="true" showAdvancedTooltip="true" enableTickmarks="true"
+														 width="100%" progress="false" class="sapUiSmallMarginBottom"
+														 visible="{=  ${/_typeEmployee} === 'autonomo'}">
+														<ResponsiveScale tickmarksBetweenLabels="50"/>
+													</Slider>
+
+													<Slider value="{/salary}"
+														min="50000" 
+														max="200000"
+														step="1000" inputsAsTooltips="true" showAdvancedTooltip="true" enableTickmarks="true"
+														 width="100%" progress="false" class="sapUiSmallMarginBottom"
+														 visible="{=  ${/_typeEmployee} === 'gerente'}">
+														<ResponsiveScale tickmarksBetweenLabels="50"/>
+													</Slider>
+												</VBox>
+                                                <Label text="{i18n>FechaIncorporacion}" required="true" />
+                                                <DatePicker dateValue="{/CreationDate}" valueState="{/_CreationDateState}"
+                                                 change="onEmployeeValidation"  />
                                 </form:SimpleForm>
+
+                            </WizardStep>
+
+<!--3) Información Adicional--> 
+                            <WizardStep id="dataInfoAdicional" title="{i18n>infoAdicional}" validated="true" >
+                               <MessageStrip class="sapUiSmallMarginBottom"
+                                              text="{i18n>msgStep3}"
+                                              showIcon="true" />
+
+                                <Label text="{i18n>comentario}" width="100%"/>
+                                <TextArea value="/comentario" width="100%"/>
+                                <UploadCollection
+													id="UploadCollection"
+													maximumFilenameLength="55"
+													maximumFileSize="10"
+													multiple="true"
+													uploadUrl="/sap/opu/odata/sap/ZEMPLOYEES_SRV/Attachments"
+													sameFilenameAllowed="true"
+													instantUpload="false"
+													change="onChange"
+													beforeUploadStarts="onBeforeUploadStart"
+													noDataDescription="{i18n>Fichero}" />
 
                             </WizardStep>
 
@@ -75,8 +132,20 @@
                             </OverflowToolbar>
                         </footer>
                     </Page>
-                </pages>
-            </NavContainer>
-        </content>
+<!-- Page 
+                <Page id="ReviewPage" title="{i18n>resumen}">
+								<core:Fragment fragmentName="logaligroup.rrhh.HTML5Module.fragment.ReviewPage" type="XML"/>
+								<footer>
+									<Toolbar>
+										<ToolbarSpacer></ToolbarSpacer>
+										<Button text="{i18n>guardar}" press="onSaveEmployee"></Button>
+										<Button text="{i18n>cancelar}" press="onCancel"></Button>
+									</Toolbar>
+								</footer>
+				</Page>
+END-->
+            </pages>
+        </NavContainer>
+    </content>
     </Page>
 </mvc:View>
