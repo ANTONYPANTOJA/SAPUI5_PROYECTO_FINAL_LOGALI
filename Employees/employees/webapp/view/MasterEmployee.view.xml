@@ -1,0 +1,28 @@
+<mvc:View xmlns:layout="sap.ui.layout"
+    controllerName="logaligroup.employees.controller.MasterEmployee"
+    xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+>
+    <Page id="page" title="{i18n>title}">
+                <content>
+              <HBox id="Hbox_01" wrap="Wrap">
+                    <Label id="Label_01" labelFor="Input_01"  text="{i18n>labelEmployee}" class="sapUiSmallMargin" />
+                    <Input id="Input_01" maxLength="6" width="200px" class="sapUiSmallMarginEnd"
+                            value="{jsonCountries>/EmployeeId}" />
+                
+                   <Label id="labelCountry" labelFor="slCountry" text="{i18n>labelCountry}" class="sapUiSmallMargin" />
+                   <Select id="slCountry" forceSelection="false"  items="{jsonCountries>/ListCountry}"
+                            selectedKey="{jsonCountries>/CountryKey}">
+                        <items>
+                            <core:Item id="_IDGenItem1" key="{jsonCountries>Key}" text="{jsonCountries>Text}"/>
+                        </items>
+                   </Select> 
+                   <Button id="btnFilter" text="{i18n>btnFilter}" icon="sap-icon://search" press="onFilter" class="sapUiSmallMarginEnd"/>
+                   <Button id="btnClearFilter" text="{i18n>btnClearFilter}" icon="sap-icon://clear-filter" press="onClearFilter" class="sapUiSmallMarginEnd"/>
+                  </HBox>  
+                        <core:Fragment fragmentName="logaligroup.employees.fragment.TableEmployee" type="XML" />
+                    </content>
+                </Page>
+</mvc:View>
