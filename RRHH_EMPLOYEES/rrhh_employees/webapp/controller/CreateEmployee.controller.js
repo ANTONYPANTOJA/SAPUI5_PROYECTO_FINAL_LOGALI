@@ -1,11 +1,17 @@
 //@ts-nocheck
 sap.ui.define([
-    'sap/ui/core/mvc/Controller'
+    'sap/ui/core/mvc/Controller',
+    "sap/m/MessageBox",
+    "sap/m/MessageToast",
+    "sap/m/UploadCollectionParameter"
     /**
          * @param {typeof sap.ui.core.mvc.Controller} Controller
+         * @param {typeof sap.m.MessageBox} MessageBox
+         * @param {typeof sap.m.MessageToast} MessageToast
+         * @param {typeof sap.m.UploadCollectionParameter} UploadCollectionParameter
          */
 
-], function (Controller) {
+], function (Controller,MessageBox,MessageToast,UploadCollectionParameter) {
     'use strict';
 
     return Controller.extend("logaligroup.rrhhemployees.controller.CreateEmployee", {
@@ -162,9 +168,125 @@ sap.ui.define([
 
 
         },
+        wizardCompletedHandler:function(oEvent){
+
+            	//Se navega a la página review
+				var wizardNavContainer = this.byId("wizardNavContainer");
+				wizardNavContainer.to(this.byId("ReviewPage"));
+
+                //Obtener los archivos cargados
+                var uploadCollection = this.byId("UploadCollection");
+				var files = uploadCollection.getItems();
+				var numFiles = uploadCollection.getItems().length;
+				this._modelEmployee.setProperty("/_numFiles",numFiles);
+
+                if (numFiles > 0) {
+					var arrayFiles = [];
+					for(var i in files){
+						arrayFiles.push({DocName:files[i].getFileName(),MimeType:files[i].getMimeType()});	
+					}
+					this._modelEmployee.setProperty("/_files",arrayFiles);
+				}else{
+					this._modelEmployee.setProperty("/_files",[]);
+				}
+
+                
+
+                //Binding the Elements
+                //var txtTypeEmployee = this.getById("txtTypeEmployee");
+                //txtTypeEmployee.bindProperty("value", "/_typeEmployee");
+
+                //this._modelEmployee.bind(this);
+
+        },
+        stepEdit: function(id_step){
+            var wizardNavContainer = this.byId("wizardNavContainer");
+            var fnAfterNavigate = function () {
+				this._wizard.goToStep(this.byId(id_step));
+				//Se quita la función para que no vuelva a ejecutar al volver a navegar
+				wizardNavContainer.detachAfterNavigate(fnAfterNavigate);
+			}.bind(this);
+
+		    wizardNavContainer.attachAfterNavigate(fnAfterNavigate);
+		    wizardNavContainer.back();
+        },
+        pasoOne: function(){
+            this.stepEdit.bind(this)("typeEmployeeStep");
+        },
+        pasoTwo: function(){
+            this.stepEdit.bind(this)("dataEmployeeStep");
+        },
+        pasoThree: function(){
+            this.stepEdit.bind(this)("dataInfoAdicional");
+        },
         onCancel: function () {
 
-        }
+            MessageBox.confirm(this.oView.getModel("i18n").getResourceBundle().getText("preguntaCancelar"),{
+                onClose : function(oAction){
+                    if(oAction === "OK"){
+                        //Regresamos al menú principal
+                        var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                        oRouter.navTo("RouteApp",{},true);//Navegar al menú principal
+                    }
+                }.bind(this)
+            });
+
+        },
+        onSaveEmployee: function(){
+
+            var dataJson = this.getView().getModel().getData();
+
+            var inputDataBody = {
+                SapId: this.getOwnerComponent().SapId,
+                Type:           parseInt(dataJson.type).toString(),
+                FirstName:      dataJson.FirstName,
+                LastName:       dataJson.LastName,
+                Dni:            dataJson.Dni,
+                CreationDate:   dataJson.CreationDate,
+                Comments:       dataJson.comentario
+            };
+
+            //Rellenar el Salary
+            inputDataBody.UserToSalary = [{
+                                            Amount : parseFloat(dataJson.salary).toString(),
+                                            Comments : dataJson.comentario,
+                                            Waers : "EUR" }];
+
+            this.getView().setBusy(true);
+            console.log(inputDataBody);
+
+            //Llamar a la función POST - CREATE del Odata
+            this.getView().getModel("odataModel").create("/Users",inputDataBody,{
+
+                success: function(data){
+                    console.log("ok:" + data );
+                    this.getView().setBusy(false);
+                    this.idUser = data.EmployeeId;
+                    MessageBox.information(this.oView.getModel("i18n").getResourceBundle().getText("empleadoNew") + ": " + this.idUser,
+                    
+                    {
+                       onClose: function() {
+                        
+                        //Volver al Menú
+                        var wizardNavContainer = this.byId("wizardNavContainer");
+						wizardNavContainer.back();
+
+                        var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                        oRouter.navTo("RouteApp",{},true);
+
+
+                       }.bind(this) 
+                    });
+
+                }.bind(this),
+                error: function(e){
+                    this.getView().setBusy(false);
+                    console.log("error:" + e );
+                    MessageToast.show(this.oView.getModel("i18n").getResourceBundle().getText("odataSaveKO"));
+                }.bind(this)
+            });
+
+            }
 
     });
 

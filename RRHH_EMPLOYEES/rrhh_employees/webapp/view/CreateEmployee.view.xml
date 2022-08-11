@@ -108,7 +108,7 @@
                                               showIcon="true" />
 
                                 <Label text="{i18n>comentario}" width="100%"/>
-                                <TextArea value="/comentario" width="100%"/>
+                                <TextArea value="{/comentario}" width="100%"/>
                                 <UploadCollection
 													id="UploadCollection"
 													maximumFilenameLength="55"
@@ -132,9 +132,9 @@
                             </OverflowToolbar>
                         </footer>
                     </Page>
-<!-- Page 
+<!-- Page  END-->
                 <Page id="ReviewPage" title="{i18n>resumen}">
-								<core:Fragment fragmentName="logaligroup.rrhh.HTML5Module.fragment.ReviewPage" type="XML"/>
+							 <core:Fragment fragmentName="logaligroup.rrhhemployees.fragment.ReviewPage" type="XML"/>
 								<footer>
 									<Toolbar>
 										<ToolbarSpacer></ToolbarSpacer>
@@ -143,7 +143,7 @@
 									</Toolbar>
 								</footer>
 				</Page>
-END-->
+
             </pages>
         </NavContainer>
     </content>

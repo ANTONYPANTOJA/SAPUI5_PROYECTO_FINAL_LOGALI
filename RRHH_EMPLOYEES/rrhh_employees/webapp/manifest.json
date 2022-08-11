@@ -17,7 +17,7 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "/sap/opu/odata/sap/ZEMPLOYEES_SRV/",
+        "uri": "sap/opu/odata/sap/ZEMPLOYEES_SRV/",
         "type": "OData",
         "settings": {
           "annotations": [],
@@ -69,10 +69,14 @@
           "bundleName": "logaligroup.rrhhemployees.i18n.i18n"
         }
       },
-      "": {
+      "odataModel": { 
         "dataSource": "mainService",
         "preload": true,
-        "settings": {}
+        "settings": {
+            "defaultOperationMode": "Server",
+            "defaultBindingMode": "OneWay",
+            "defaultCountMode": "Request"
+        }
       }
     },
     "resources": {
