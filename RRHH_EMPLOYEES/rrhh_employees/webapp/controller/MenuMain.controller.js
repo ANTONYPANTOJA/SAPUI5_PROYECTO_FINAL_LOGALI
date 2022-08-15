@@ -33,6 +33,10 @@ sap.ui.define([
                 var routersViews = sap.ui.core.UIComponent.getRouterFor(this);
                 routersViews.navTo("CreateEmployee", {} , false );
 
+            },
+            onViewEmployee: function(){
+                var routerViews_aux = sap.ui.core.UIComponent.getRouterFor(this);
+                routerViews_aux.navTo("ViewEmployee", {} , false );
             }
         });
     });

@@ -110,7 +110,16 @@
             "target":[
                         "CreateEmployee"
                      ]
+        },
+        {
+            "name": "ViewEmployee",
+            "pattern": "ViewEmployee",
+            "target":[
+                        "ViewEmployee"
+                     ]
         }
+
+
       ],
       "targets": {
         "TargetApp": {
@@ -127,13 +136,20 @@
             "clearControlAggregation": false,
             "viewId": "CreateEmployee",
             "viewName": "CreateEmployee"
-        }
-      },
+        },
+        "ViewEmployee":
+        {
+            "viewType": "XML",
+            "transition": "slide",
+            "clearControlAggregation": false,
+            "viewId": "ViewEmployee",
+            "viewName": "ViewEmployee"
+        },
         "App": {
         "viewType": "XML",
         "viewName": "App"
+        }
     }
-
     },
     "rootView": {
       "viewName": "logaligroup.rrhhemployees.view.App",

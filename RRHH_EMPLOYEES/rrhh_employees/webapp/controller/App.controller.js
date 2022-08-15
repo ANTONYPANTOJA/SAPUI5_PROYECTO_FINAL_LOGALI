@@ -10,7 +10,8 @@ sap.ui.define([
 
         return Controller.extend("logaligroup.rrhhemployees.controller.App", {
             onInit: function () {
-
+            
             }
+        
         });
     });
