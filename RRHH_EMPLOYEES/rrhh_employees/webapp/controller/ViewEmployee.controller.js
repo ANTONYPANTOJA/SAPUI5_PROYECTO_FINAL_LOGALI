@@ -3,15 +3,17 @@ sap.ui.define([
     'sap/ui/core/mvc/Controller',
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-    "sap/m/UploadCollectionParameter"
+    "sap/m/UploadCollectionParameter",
+    "sap/ui/core/Fragment"
     /**
     * @param {typeof sap.ui.core.mvc.Controller} Controller
     * @param {typeof sap.m.MessageBox} MessageBox
     * @param {typeof sap.m.MessageToast} MessageToast
     * @param {typeof sap.m.UploadCollectionParameter} UploadCollectionParameter
+    * @param {typeof sap.ui.core.Fragment} Fragment
     */
 
-], function (Controller, MessageBox, MessageToast, UploadCollectionParameter) {
+], function (Controller, MessageBox, MessageToast, UploadCollectionParameter,Fragment) {
     'use strict';
 
     return Controller.extend("logaligroup.rrhhemployees.controller.App", {
@@ -146,6 +148,50 @@ sap.ui.define([
                     }.bind(this)
                 });
                 this.getView().setBusy(false);
+
+        },
+
+        onAscender: function(oEvent){
+
+            if(!this.riseDialog){
+                this.riseDialog = sap.ui.xmlfragment("logaligroup.rrhhemployees.fragment.PopupAscenso", this);
+                this.getView().addDependent(this.riseDialog);
+            }
+            this.riseDialog.setModel(new sap.ui.model.json.JSONModel({}),"newAscenso");
+            this.riseDialog.open();
+            
+        },
+        onCancelAscenso: function(){
+            this.riseDialog.close();
+        },
+
+        onGuardarAscenso: function(){
+            var oresourceBundle = this.getView().getModel("i18n").getResourceBundle();
+            var dataModelAscenso = this.riseDialog.getModel("newAscenso").getData();
+
+            var bodySend = 
+            {
+                Amount : parseFloat(dataModelAscenso.Ammount).toString(),
+                Waers  : 'EUR',
+			    CreationDate : dataModelAscenso.CreationDate,
+			    Comments : dataModelAscenso.Comments,
+			    SapId : this.getOwnerComponent().SapId,
+			    EmployeeId : this.employeeId
+            };
+            this.getView().setBusy(true);//Pausa
+            this.getView().getModel("odataModel").create("/Salaries",bodySend,
+            {
+                success: function(){
+                    this.getView().setBusy(false);
+                    MessageToast.show(oresourceBundle.getText("ascensoOk"));
+                    this.onCancelAscenso();
+                }.bind(this),
+                error: function(){
+                    this.getView().setBusy(false);
+                    MessageToast.show(oresourceBundle.getText("ascensoKo"));
+
+                }.bind(this)
+            });
 
         }
     });

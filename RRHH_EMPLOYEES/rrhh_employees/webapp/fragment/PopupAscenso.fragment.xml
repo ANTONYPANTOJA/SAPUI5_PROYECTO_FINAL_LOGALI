@@ -1,0 +1,62 @@
+<core:FragmentDefinition 
+            xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m"  xmlns:f="sap.ui.layout.form">
+
+<Dialog title="{i18n>TitleAscenso}">
+<content>
+   <!--Formulario--> 
+        	<f:Form id="FormToolbar"
+			        editable="true"
+			        ariaLabelledBy="">
+               
+               <f:layout>
+						<f:ResponsiveGridLayout
+							labelSpanXL="3"
+							labelSpanL="3"
+							labelSpanM="3"
+							labelSpanS="12"
+							adjustLabelSpan="false"
+							emptySpanXL="4"
+							emptySpanL="4"
+							emptySpanM="4"
+							emptySpanS="0"
+							columnsXL="1"
+							columnsL="1"
+							columnsM="1"
+							singleContainerFullSize="false" />
+					</f:layout>
+            
+                <f:formContainers>
+                    <f:FormContainer>
+                    	<f:formElements>
+                            <f:FormElement label="{i18n>salarioAscenso}">  <!--Salario-->
+							<f:fields>
+								<Input  id="salarioAscenso" value="{newAscenso>/Ammount}"/>
+							</f:fields>
+						</f:FormElement>
+
+                        <f:FormElement label="{i18n>fechaAscenso}">  <!--Fecha-->
+							<f:fields>
+								<DatePicker  id="CreationDateAscensoState" dateValue="{newAscenso>/CreationDate}"/>
+							</f:fields>
+						</f:FormElement>
+
+                         <f:FormElement label="{i18n>comentarioAscenso}">  <!--Comentario-->
+							<f:fields>
+								<TextArea id="comentarioAs" width="100%" value="{newAscenso>/Comments}"/>
+							</f:fields>
+						</f:FormElement>
+                        
+                        </f:formElements>
+                        </f:FormContainer>
+                </f:formContainers>
+
+            </f:Form>
+            </content>
+
+        <buttons>
+				  <Button text="{i18n>aceptar}" press="onGuardarAscenso"></Button>
+				  <Button text="{i18n>cancelar}" press="onCancelAscenso"></Button>
+                </buttons>
+
+ </Dialog>   
+</core:FragmentDefinition>

@@ -35,7 +35,7 @@ sap.ui.define([
 
         },
 
-        onInit: function () {
+        onInit: function () { 
 
         },
         Step2: function (oEvent) {
